@@ -1,0 +1,19 @@
+.is-completed {
+	background: black;
+	color: red;
+}
+
+.todo-card footer button:hover {
+	background: #E9E8E8;
+	border-radius: 10px;
+	opacity: 0.7;
+}
+
+.todo-card footer button {
+	width: 30% !important;
+}
+
+.card-block {
+	padding-bottom: 5px;
+}
+

@@ -1,0 +1,12 @@
+<todo-form-modal (createClicked)='todoFormHandler($event)' (closeClicked)='modalCancel($event)'></todo-form-modal>
+
+<div class="row">
+
+	<todo-list-item class="col-sm-4 col-lg-3 col-xl-3 align-items-center" 
+					style="display: inline-block;" 
+					*ngFor='let todo of todos | async' 
+					[todo]='todo' 
+					(deleteClicked)='delete($event)' 
+					(editClicked)='switchToEditMode($event)' 
+					(toggleClicked)='toggle($event)'></todo-list-item>
+</div>
