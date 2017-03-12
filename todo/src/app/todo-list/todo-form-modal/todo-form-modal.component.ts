@@ -1,4 +1,5 @@
 import { Component, OnInit, EventEmitter, Output, ViewChild, ElementRef } from '@angular/core';
+import { TodoFactory } from '../todo.factory';
 
 @Component({
   selector: 'todo-form-modal',
@@ -17,25 +18,39 @@ export class TodoFormModalComponent {
 	closeClicked: 	 EventEmitter<any> = new EventEmitter<any>();
 
 	@ViewChild('todoDescription')
-	description: ElementRef;
+	_description: ElementRef;
 
 	@ViewChild('todoTitle')
-	todoTitle: ElementRef;
+	_todoTitle: ElementRef;
 
 	@ViewChild('todoDeadline')
-	todoDeadline: ElementRef;
+	_todoDeadline: ElementRef;
 
 
 	@ViewChild('todoId')
-	todoId: ElementRef;
+	_todoId: ElementRef;
+
+	@ViewChild('todoDateCreated')
+	_todoDateCreated: ElementRef;
+
+	constructor(private _todoFactory: TodoFactory) {}
 
 	okClickHandler(): void {
-		this.createClicked.emit({	
-									_id:			this.todoId.nativeElement.value,
-									description: 	this.description.nativeElement.value,
-									name: 			this.todoTitle.nativeElement.value,
-									deadline:		this.todoDeadline.nativeElement.value
-								});
+
+		console.log('XXX');
+		console.log(this._todoDeadline.nativeElement.value);
+
+		this.createClicked.emit(
+									this._todoFactory.create(
+											this._todoId.nativeElement.value,
+											this._todoTitle.nativeElement.value,
+											this._description.nativeElement.value,
+											false,
+											this._todoDateCreated.nativeElement.value,
+											null,
+											this._todoDeadline.nativeElement.value
+										)	
+								);
 	}
 
 	modalCloseClickHandler(): void {

@@ -3,6 +3,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { AppState } from '../../app-state/app-state';
 import { state } from '../../di-tokens';
 import { Todo } from '../../todo';
+import * as moment from 'moment';
 
 @Directive({
   selector: '[todoModal]'
@@ -32,20 +33,43 @@ export class TodoFormFillerDirective implements AfterViewInit {
   	const currentTodo 		  = this._appState.getValue().currentlySelectedTodo;
     const todoTitleField    = (<HTMLInputElement> document.getElementById('todo-title'));
     const todoIdField       = (<HTMLInputElement> document.getElementById('todo-id'));
+    const todoDeadline      = (<HTMLInputElement> document.getElementById('todo-deadline')); 
+    const todoDateCreated   = (<HTMLInputElement> document.getElementById('todo-date-created'));
   	const descriptionField 	= (<HTMLInputElement> document.getElementById('todo-description'));
     const modalButton       = (<HTMLButtonElement> document.getElementById('todo-ok-button'));
     const modalTitle        = (<HTMLTitleElement> document.getElementById('todo-modal-title'));
     const form              = (<HTMLFormElement> document.getElementById('todo-form'));
 
-  	currentTodo ? this.todoEditMode(currentTodo, todoIdField, descriptionField, todoTitleField, modalButton, modalTitle) : this.todoAddMode(form,todoIdField, modalButton, modalTitle);
+  	currentTodo ? this.todoEditMode(currentTodo, 
+                                    todoIdField, 
+                                    todoDateCreated,
+                                    todoDeadline,
+                                    descriptionField, 
+                                    todoTitleField, 
+                                    modalButton, 
+                                    modalTitle) : this.todoAddMode(form,todoIdField, todoDateCreated, modalButton, modalTitle);
 
   }
   
-  todoEditMode(currentTodo: Todo, todoIdField: HTMLInputElement, descriptionElement: HTMLInputElement, todoTitleField: HTMLInputElement, modalButton: HTMLButtonElement, modalTitle: HTMLTitleElement) {
+  todoEditMode(currentTodo:         Todo, 
+               todoIdField:         HTMLInputElement, 
+               todoDateCreated:     HTMLInputElement, 
+               todoDeadline:        HTMLInputElement,
+               descriptionElement:  HTMLInputElement, 
+               todoTitleField:      HTMLInputElement, 
+               modalButton:         HTMLButtonElement, 
+               modalTitle:          HTMLTitleElement) {
 
-      console.log(currentTodo);
-      
+      console.log('todoDeadline');
+      console.log(todoDeadline);
+      console.log(currentTodo.deadline.toString());
+     
       todoIdField.value          = currentTodo._id;
+      todoDateCreated.value      = currentTodo.dateCreated.toString();
+      todoDeadline.value         = moment(currentTodo.deadline).format('YYYY-MM-DD');
+
+      console.log('moment(currentTodo.deadline).format();')
+      console.log(moment(currentTodo.deadline).format('YYYY-MM-DD'));
       descriptionElement.value   = currentTodo.description;
       todoTitleField.value       = currentTodo.name;
       modalTitle.innerHTML       = 'Edit Todo ' + currentTodo.description;
@@ -53,9 +77,10 @@ export class TodoFormFillerDirective implements AfterViewInit {
   
   }
 
-   todoAddMode(form: HTMLFormElement, todoIdField: HTMLInputElement, modalButton: HTMLButtonElement, modalTitle: HTMLTitleElement) {
+   todoAddMode(form: HTMLFormElement, todoIdField: HTMLInputElement, todoDateCreatedField: HTMLInputElement, modalButton: HTMLButtonElement, modalTitle: HTMLTitleElement) {
 
       form.reset();
+      todoDateCreatedField.value = '';
       todoIdField.value          = ''; // form.reset() does not reset hidden fields;
       modalTitle.innerHTML       = 'Create New Todo';
       modalButton.innerHTML      = 'Create';

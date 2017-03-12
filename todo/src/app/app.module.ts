@@ -14,6 +14,7 @@ import { LoadTodosAction } from './app-state/todo.actions'
 import { applicationStateFactory } from './app-state/app-state.factory';
 import { TodoFormModalComponent } from './todo-list/todo-form-modal/todo-form-modal.component';
 import { TodoFormFillerDirective } from './todo-list/todo-form-modal/todo-form-filler.directive';
+import { TodoFactory } from './todo-list/todo.factory';
 import { Todo } from './todo';
 
 
@@ -36,6 +37,7 @@ export function behaviorSubjectFactory() {
     AlertModule.forRoot()
   ],
   providers: [
+    TodoFactory,
     { provide: initialState, 
       useValue: { 
                   todos: [], 

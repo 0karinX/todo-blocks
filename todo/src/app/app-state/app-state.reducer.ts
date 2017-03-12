@@ -25,6 +25,8 @@ export function reduceTodos( state: Todo[], action: Action): Todo[] {
 
 		let index 		= state.findIndex((todo) => todo._id === action.modifiedTodo._id);
 		state[index]	= action.modifiedTodo;
+
+		console.log(state);
 		return state;
 
 	} else if( action instanceof ToggleTodoAction) {

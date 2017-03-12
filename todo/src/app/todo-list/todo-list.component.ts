@@ -48,8 +48,6 @@ export class TodoListComponent implements OnInit {
 
   todoFormHandler( todo: Todo ): void {
       
-      console.log(todo);
-
       //if the todo passed contains no _id, we will create it on the server.. if _id is existing.. do the edit procedure.
       if( !todo._id ){
           console.log('no id, create');
