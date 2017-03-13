@@ -88,7 +88,18 @@ export class TodoListComponent implements OnInit {
   }
 
   toggle( todo: Todo): void {
-      this._dispatcher.next( new ToggleTodoAction( todo ));
+
+    todo.isCompleted = !todo.isCompleted;
+//      this._dispatcher.next( new ToggleTodoAction( todo ));
+
+    this._todoListService.editTodo( todo ).subscribe(
+
+        res => {
+          this._dispatcher.next( new EditTodoAction( todo ));
+        },
+        err => {}
+      );
+
   }
 
   modalCancel() {

@@ -6,7 +6,8 @@ import 'rxjs/add/operator/share';
 import { AppState } from './app-state';
 import { Action } from './todo.actions'
 import { Todo } from '../todo';
-import { reduceTodos, reduceCurrentTodo } from './app-state.reducer';
+import { TodoSorter } from '../todo-sort/todo-sorter';
+import { reduceTodos, reduceCurrentTodo, sortStateTodos } from './app-state.reducer';
 
 function wrapIntoBehaviorSubject(init, obs) {
 
@@ -16,14 +17,17 @@ function wrapIntoBehaviorSubject(init, obs) {
     return res;
 }
 
-export function applicationStateFactory( state: AppState, action: Observable<Action>): Observable<AppState> {
+export function applicationStateFactory( state: AppState, action: Observable<Action>, todoSorter: TodoSorter): Observable<AppState> {
 
 	let appStateObservable = action.scan( (oldState: AppState, action) => {
 
 		let newState: AppState = {
 			todos: 					reduceTodos(oldState.todos, action),
-			currentlySelectedTodo:	reduceCurrentTodo(oldState.currentlySelectedTodo, action)
+			currentlySelectedTodo:	reduceCurrentTodo(oldState.currentlySelectedTodo, action),
+			todoSortKey: 'dateCreated'
 		};
+
+		newState.todos = todoSorter.sortTodos(newState.todoSortKey, newState.todos);
 
 		return newState;
 

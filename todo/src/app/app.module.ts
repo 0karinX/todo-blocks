@@ -8,7 +8,7 @@ import {BehaviorSubject} from 'rxjs/BehaviorSubject.js';
 import { AppComponent } from './app.component';
 import { TodoListComponent } from './todo-list/todo-list.component';
 import { TodoListItemComponent } from './todo-list/todo-list-item/todo-list-item.component';
-import { dispatcher, state, initialState } from "./di-tokens";
+import { dispatcher, state, initialState, todoSorter } from "./di-tokens";
 import { Action } from './app-state/todo.actions';
 import { LoadTodosAction } from './app-state/todo.actions'
 import { applicationStateFactory } from './app-state/app-state.factory';
@@ -16,10 +16,19 @@ import { TodoFormModalComponent } from './todo-list/todo-form-modal/todo-form-mo
 import { TodoFormFillerDirective } from './todo-list/todo-form-modal/todo-form-filler.directive';
 import { TodoFactory } from './todo-list/todo.factory';
 import { Todo } from './todo';
+import { TodoSyncStatusComponent } from './todo-list/todo-sync-status/todo-sync-status.component';
+
+import { TodoSorter } from './todo-sort/todo-sorter';
+import { TodoDeadlineSort } from  './todo-sort/todo-deadline.sort';
+import { TodoDateCreatedSort } from  './todo-sort/todo-datecreated.sort';
 
 
 export function behaviorSubjectFactory() {
-  return new BehaviorSubject<Action>(new LoadTodosAction([]));
+    return new BehaviorSubject<Action>(new LoadTodosAction([]));
+}
+
+export function todoSorterFactory( _todoDeadlineSort: TodoDeadlineSort,  _todoDateCreatedSort : TodoDateCreatedSort){
+    return new TodoSorter( _todoDeadlineSort, _todoDateCreatedSort );
 }
 
 @NgModule({
@@ -29,6 +38,7 @@ export function behaviorSubjectFactory() {
     TodoListItemComponent,
     TodoFormModalComponent,
     TodoFormFillerDirective,
+    TodoSyncStatusComponent,
   ],
   imports: [
     BrowserModule,
@@ -38,8 +48,13 @@ export function behaviorSubjectFactory() {
   ],
   providers: [
     TodoFactory,
+    TodoDeadlineSort,
+    TodoDateCreatedSort,
+    { provide: todoSorter, 
+      useFactory: todoSorterFactory, 
+      deps: [ TodoDeadlineSort, TodoDateCreatedSort ]},
     { provide: initialState, 
-      useValue: { 
+      useValue: {
                   todos: [], 
                   currentlySelectedTodo: null
                 } 
@@ -48,7 +63,7 @@ export function behaviorSubjectFactory() {
     { 
       provide:       state, 
       useFactory:    applicationStateFactory, 
-      deps:          [ initialState, dispatcher]
+      deps:          [ initialState, dispatcher, todoSorter]
     }
 
   ],

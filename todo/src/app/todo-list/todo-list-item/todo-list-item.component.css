@@ -1,12 +1,22 @@
-.is-completed {
-	background: black;
-	color: red;
+.is-completed .card-block {
+	opacity: 0.4;
+	height: 100%;
+}
+
+.completed-todo-overlay h1{
+	font-size: 	3rem;
+	position: 	absolute;
+	left: 		0;
+    right: 		0;
+    top: 		40%;
+    bottom:		0;
+    margin: 	auto; 
 }
 
 .todo-card footer button:hover {
 	background: #E9E8E8;
 	border-radius: 10px;
-	opacity: 0.7;
+	opacity: 0.7 !important;
 }
 
 .todo-card footer button {

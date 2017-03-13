@@ -1,5 +1,6 @@
 import { Component, OnInit, EventEmitter, Output, ViewChild, ElementRef } from '@angular/core';
 import { TodoFactory } from '../todo.factory';
+import * as moment from 'moment';
 
 @Component({
   selector: 'todo-form-modal',

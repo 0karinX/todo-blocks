@@ -1,8 +1,14 @@
 import { AppState } from './app-state';
 import { Action } from './todo.actions';
-import { LoadTodosAction, DeleteTodoAction, AddTodoAction, EditTodoAction, ToggleTodoAction, SetSelectedTodoAction, UnsetSelectedTodoAction } from './todo.actions';
+import { LoadTodosAction, 
+		 DeleteTodoAction, 
+		 AddTodoAction, 
+		 EditTodoAction, 
+		 ToggleTodoAction, 
+		 SetSelectedTodoAction, 
+		 UnsetSelectedTodoAction } from './todo.actions';
 import { Todo} from '../todo';
-
+import * as moment from 'moment';
  
 export function reduceTodos( state: Todo[], action: Action): Todo[] {
 
@@ -31,9 +37,10 @@ export function reduceTodos( state: Todo[], action: Action): Todo[] {
 
 	} else if( action instanceof ToggleTodoAction) {
 
-		let index 		= state.findIndex((todo) => todo._id === action.toggleTodo._id);
+		let index = state.findIndex((todo) => todo._id === action.toggleTodo._id);
 		state[index].isCompleted = !action.toggleTodo.isCompleted;
-		return sortStateTodos(state);
+		
+		return (state);
 
 	}else
 		return state;
@@ -51,18 +58,26 @@ export function reduceCurrentTodo( state: Todo, action: Action ): Todo {
 		return state;
 }
 
-function sortStateTodos(todos: Array<Todo>) {
+export function sortStateTodos(todos: Array<Todo>) {
 
 	todos.sort((todo1, todo2) => {
 
-		if(todo1.isCompleted && todo2.isCompleted){
-			return 1;
+		const momentTodo1 = todo1.deadline ? moment(todo1.deadline) : moment();
+		const momentTodo2 = todo2.deadline ? moment(todo2.deadline) : moment();
 
-		} else if(todo1.isCompleted && !todo2.isCompleted) {
+		if(!momentTodo1 || !momentTodo2){
+			console.log('missing sumting');
 			return 1;
-		} else {
+		}
+
+		if(momentTodo1.isAfter(momentTodo2)){
+			return 1;
+		}
+		else if(momentTodo2.isAfter(momentTodo1)){
 			return -1;
 		}
+		else
+			return 0;
 	});
 
 	return todos;

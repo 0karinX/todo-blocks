@@ -1,11 +1,15 @@
 <div class="card todo-card {{ todo.isCompleted ? 'is-completed' : ''}}" >
   <h5 class="card-header" style="white-space: normal">
-	{{ todo.name || 'Title Goes here' }}
+	{{ todo.name || 'Title Goes here' }} 
  </h5>
-  <div class="card-block">
+	<div class="completed-todo-overlay" *ngIf="todo.isCompleted">
+  		<h1 class="text-center">DONE!</h1>
+  	</div>
+  	<div class="card-block">
+
       <p><i>{{ todo.description }}</i></p>
-      <p class="todo-deadline"> Deadline: {{ todo.deadline | date:'short' }}</p>
-      <p class="todo-date-created"> Date Created: {{ todo.dateCreated | date:'shortDate' }}</p>
+      <p class="todo-deadline"> Deadline: {{ todo.deadline | date:'shortDate' }}</p>
+      <p class="todo-date-created"> Date Created: {{ todo.dateCreated | date:'short' }}</p>
       <footer>
       	<hr/>
 		<button type="button" (click)='toggleClickHandler($event)' class="btn btn-link btn-sm btn-success">
@@ -24,5 +28,5 @@
 			</svg>
 		</button>
       </footer>
-  </div>
+  	</div>
 </div>

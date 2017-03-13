@@ -4,4 +4,5 @@ export interface AppState {
 
 	todos: Todo[];
 	currentlySelectedTodo: Todo;
+	todoSortKey: string;
 }

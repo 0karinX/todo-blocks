@@ -60,16 +60,11 @@ export class TodoFormFillerDirective implements AfterViewInit {
                modalButton:         HTMLButtonElement, 
                modalTitle:          HTMLTitleElement) {
 
-      console.log('todoDeadline');
-      console.log(todoDeadline);
-      console.log(currentTodo.deadline.toString());
      
       todoIdField.value          = currentTodo._id;
       todoDateCreated.value      = currentTodo.dateCreated.toString();
-      todoDeadline.value         = moment(currentTodo.deadline).format('YYYY-MM-DD');
+      todoDeadline.value         = currentTodo.deadline && moment(currentTodo.deadline).format('YYYY-MM-DD');
 
-      console.log('moment(currentTodo.deadline).format();')
-      console.log(moment(currentTodo.deadline).format('YYYY-MM-DD'));
       descriptionElement.value   = currentTodo.description;
       todoTitleField.value       = currentTodo.name;
       modalTitle.innerHTML       = 'Edit Todo ' + currentTodo.description;
