@@ -7,7 +7,7 @@ import { AppState } from './app-state';
 import { Action } from './todo.actions'
 import { Todo } from '../todo';
 import { TodoSorter } from '../todo-sort/todo-sorter';
-import { reduceTodos, reduceCurrentTodo, sortStateTodos } from './app-state.reducer';
+import { reduceTodos, reduceCurrentTodo, reduceSortKey } from './app-state.reducer';
 
 function wrapIntoBehaviorSubject(init, obs) {
 
@@ -24,7 +24,7 @@ export function applicationStateFactory( state: AppState, action: Observable<Act
 		let newState: AppState = {
 			todos: 					reduceTodos(oldState.todos, action),
 			currentlySelectedTodo:	reduceCurrentTodo(oldState.currentlySelectedTodo, action),
-			todoSortKey: 'dateCreated'
+			todoSortKey: 			reduceSortKey(oldState.todoSortKey, action)
 		};
 
 		newState.todos = todoSorter.sortTodos(newState.todoSortKey, newState.todos);

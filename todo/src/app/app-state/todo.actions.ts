@@ -34,4 +34,9 @@ export class SetSelectedTodoAction {
 
 export class UnsetSelectedTodoAction {}
 
-export type Action = LoadTodosAction | DeleteTodoAction | AddTodoAction | EditTodoAction | ToggleTodoAction |SetSelectedTodoAction | UnsetSelectedTodoAction;
+export class ChangeSortKeyAction {
+
+	constructor( public sortKey: string){}
+}
+
+export type Action = LoadTodosAction | DeleteTodoAction | AddTodoAction | EditTodoAction | ToggleTodoAction |SetSelectedTodoAction | UnsetSelectedTodoAction | ChangeSortKeyAction;

@@ -6,7 +6,8 @@ import { LoadTodosAction,
 		 EditTodoAction, 
 		 ToggleTodoAction, 
 		 SetSelectedTodoAction, 
-		 UnsetSelectedTodoAction } from './todo.actions';
+		 UnsetSelectedTodoAction,
+		 ChangeSortKeyAction } from './todo.actions';
 import { Todo} from '../todo';
 import * as moment from 'moment';
  
@@ -32,7 +33,6 @@ export function reduceTodos( state: Todo[], action: Action): Todo[] {
 		let index 		= state.findIndex((todo) => todo._id === action.modifiedTodo._id);
 		state[index]	= action.modifiedTodo;
 
-		console.log(state);
 		return state;
 
 	} else if( action instanceof ToggleTodoAction) {
@@ -58,27 +58,10 @@ export function reduceCurrentTodo( state: Todo, action: Action ): Todo {
 		return state;
 }
 
-export function sortStateTodos(todos: Array<Todo>) {
+export function reduceSortKey(state: string, action: Action): string {
 
-	todos.sort((todo1, todo2) => {
-
-		const momentTodo1 = todo1.deadline ? moment(todo1.deadline) : moment();
-		const momentTodo2 = todo2.deadline ? moment(todo2.deadline) : moment();
-
-		if(!momentTodo1 || !momentTodo2){
-			console.log('missing sumting');
-			return 1;
-		}
-
-		if(momentTodo1.isAfter(momentTodo2)){
-			return 1;
-		}
-		else if(momentTodo2.isAfter(momentTodo1)){
-			return -1;
-		}
-		else
-			return 0;
-	});
-
-	return todos;
+	if( action instanceof ChangeSortKeyAction)
+		return action.sortKey;
+	else
+		return state;
 }

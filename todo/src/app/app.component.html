@@ -31,20 +31,6 @@
 	  </div>
 	  <todo-sync-status></todo-sync-status>
 	</nav>
-
-<div class="form-inline">
-	<label class="mr-sm-2" for="inlineFormCustomSelect">Sort by:</label>
-	<select class="custom-select mb-2 mr-sm-2 mb-sm-0" (change)='change($event.target.value)'>
-	    <option selected>Choose...</option>
-	    <option value="isCompleted">Completed</option>
-	    <option value="dateCreated">Date Created</option>
-		<option value="dateCompleted">Date Completed</option>
-	    <option value="deadline">Deadline</option>
-  	</select>
-</div>
-
-
-
 	<todo-list></todo-list>
   </div>
   </body>

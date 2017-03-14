@@ -21,14 +21,21 @@ import { TodoSyncStatusComponent } from './todo-list/todo-sync-status/todo-sync-
 import { TodoSorter } from './todo-sort/todo-sorter';
 import { TodoDeadlineSort } from  './todo-sort/todo-deadline.sort';
 import { TodoDateCreatedSort } from  './todo-sort/todo-datecreated.sort';
+import { TodoDateCompletedSort } from  './todo-sort/todo-datecompleted.sort';
+import { TodoCompletenessSort } from  './todo-sort/todo-completeness.sort';
+import { TodoSortingComponent } from './todo-list/todo-sorting/todo-sorting.component';
+import { KeysPipe } from './shared/keys.pipe';
 
 
 export function behaviorSubjectFactory() {
     return new BehaviorSubject<Action>(new LoadTodosAction([]));
 }
 
-export function todoSorterFactory( _todoDeadlineSort: TodoDeadlineSort,  _todoDateCreatedSort : TodoDateCreatedSort){
-    return new TodoSorter( _todoDeadlineSort, _todoDateCreatedSort );
+export function todoSorterFactory( _todoDeadlineSort:       TodoDeadlineSort,  
+                                   _todoDateCreatedSort :   TodoDateCreatedSort,
+                                   _todoCompletenessSort:   TodoCompletenessSort,
+                                   _todoDateCompletedSort: TodoDateCompletedSort) {
+    return new TodoSorter( _todoDeadlineSort, _todoDateCreatedSort, _todoCompletenessSort, _todoDateCompletedSort);
 }
 
 @NgModule({
@@ -39,6 +46,8 @@ export function todoSorterFactory( _todoDeadlineSort: TodoDeadlineSort,  _todoDa
     TodoFormModalComponent,
     TodoFormFillerDirective,
     TodoSyncStatusComponent,
+    TodoSortingComponent,
+    KeysPipe
   ],
   imports: [
     BrowserModule,
@@ -50,13 +59,15 @@ export function todoSorterFactory( _todoDeadlineSort: TodoDeadlineSort,  _todoDa
     TodoFactory,
     TodoDeadlineSort,
     TodoDateCreatedSort,
+    TodoCompletenessSort,
     { provide: todoSorter, 
       useFactory: todoSorterFactory, 
-      deps: [ TodoDeadlineSort, TodoDateCreatedSort ]},
+      deps: [ TodoDeadlineSort, TodoDateCreatedSort, TodoCompletenessSort ]},
     { provide: initialState, 
       useValue: {
                   todos: [], 
-                  currentlySelectedTodo: null
+                  currentlySelectedTodo: null,
+                  todoSortKey: 'dateCreated'
                 } 
     },
     { provide: dispatcher, useFactory: behaviorSubjectFactory},

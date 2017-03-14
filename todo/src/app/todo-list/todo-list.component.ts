@@ -3,7 +3,7 @@ import { TodoListService } from './todo-list.service';
 import { Todo } from '../todo';
 import { dispatcher, state, initialState } from "../di-tokens";
 import { Action } from '../app-state/todo.actions';
-import { LoadTodosAction, DeleteTodoAction, AddTodoAction, EditTodoAction, ToggleTodoAction, SetSelectedTodoAction, UnsetSelectedTodoAction } from '../app-state/todo.actions';
+import { LoadTodosAction, DeleteTodoAction, AddTodoAction, EditTodoAction, ToggleTodoAction, SetSelectedTodoAction, UnsetSelectedTodoAction, ChangeSortKeyAction } from '../app-state/todo.actions';
 import { AppState } from '../app-state/app-state';
 import { Observer } from "rxjs/Observer";
 import { Observable } from "rxjs/Observable";
@@ -89,8 +89,8 @@ export class TodoListComponent implements OnInit {
 
   toggle( todo: Todo): void {
 
-    todo.isCompleted = !todo.isCompleted;
-//      this._dispatcher.next( new ToggleTodoAction( todo ));
+    todo.isCompleted   = !todo.isCompleted;
+    todo.dateCompleted = todo.isCompleted ? new Date() : undefined; // undefined is mongoose instead of null;
 
     this._todoListService.editTodo( todo ).subscribe(
 
@@ -98,8 +98,11 @@ export class TodoListComponent implements OnInit {
           this._dispatcher.next( new EditTodoAction( todo ));
         },
         err => {}
-      );
+    );
+  }
 
+  changeSortKey(value: string): void {
+    this._dispatcher.next( new ChangeSortKeyAction(value));
   }
 
   modalCancel() {

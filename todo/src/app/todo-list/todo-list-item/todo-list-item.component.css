@@ -3,7 +3,7 @@
 	height: 100%;
 }
 
-.completed-todo-overlay h1{
+.completed-todo-overlay {
 	font-size: 	3rem;
 	position: 	absolute;
 	left: 		0;

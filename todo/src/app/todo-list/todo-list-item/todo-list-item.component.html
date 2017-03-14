@@ -4,6 +4,7 @@
  </h5>
 	<div class="completed-todo-overlay" *ngIf="todo.isCompleted">
   		<h1 class="text-center">DONE!</h1>
+  		<h5 class="text-center">Date: {{ todo.dateCompleted | date:'short' }}</h5>
   	</div>
   	<div class="card-block">
 
