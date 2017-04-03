@@ -1,5 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { TodoListService } from './todo-list.service';
+import { LoginService } from '../login/login.service';
 import { Todo } from '../todo';
 import { dispatcher, state, initialState } from "../di-tokens";
 import { Action } from '../app-state/todo.actions';
@@ -8,6 +9,8 @@ import { AppState } from '../app-state/app-state';
 import { Observer } from "rxjs/Observer";
 import { Observable } from "rxjs/Observable";
 import { TodoFormModalComponent } from './todo-form-modal/todo-form-modal.component';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'todo-list',
@@ -18,6 +21,8 @@ import { TodoFormModalComponent } from './todo-form-modal/todo-form-modal.compon
 export class TodoListComponent implements OnInit {
 
   constructor(private _todoListService: TodoListService, 
+              private _loginService: LoginService,
+              private _router: Router,
               @Inject(dispatcher) private _dispatcher: Observer<Action>,
               @Inject(state) private _state: Observable<AppState>) { }
 
@@ -109,7 +114,15 @@ export class TodoListComponent implements OnInit {
     this._dispatcher.next( new UnsetSelectedTodoAction());
   }
 
+  logout() {
+    this._loginService.logout(() => {
+      this._router.navigate(['']);
+    });
+  }
+
   get todos() {
     return this._state.map( (state: AppState) => (<Todo[]> state.todos));
   }
+
+
 }

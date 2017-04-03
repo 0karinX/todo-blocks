@@ -1,0 +1,18 @@
+#login-form {
+	padding: 15px;
+	margin-left: auto;
+    margin-right: auto; 
+}
+
+#outer {
+    display: table;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+}
+
+#middle {
+	display: table-cell;
+    vertical-align: middle;
+}
+

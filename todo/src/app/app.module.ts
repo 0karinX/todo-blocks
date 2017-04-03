@@ -2,13 +2,19 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, Inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
-import { AlertModule } from 'ng2-bootstrap';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject.js';
+import { RouterModule, Routes } from '@angular/router';
+import { LoginModule } from './login/login.module';
 
+import { LoginComponent } from './login/login.component';
+import { LoginService } from './login/login.service';
+import { AuthJWTService } from './auth/auth-strats/auth-jwt.service';
+import { IAuthService } from './auth/auth-strats/IAuthService';
+import { AuthenticatedAuthGuard } from './auth/auth-guards/authenticated.auth-guard';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject.js';
 import { AppComponent } from './app.component';
 import { TodoListComponent } from './todo-list/todo-list.component';
 import { TodoListItemComponent } from './todo-list/todo-list-item/todo-list-item.component';
-import { dispatcher, state, initialState, todoSorter } from "./di-tokens";
+import { dispatcher, state, initialState, todoSorter, authJWTService } from "./di-tokens";
 import { Action } from './app-state/todo.actions';
 import { LoadTodosAction } from './app-state/todo.actions'
 import { applicationStateFactory } from './app-state/app-state.factory';
@@ -26,6 +32,9 @@ import { TodoCompletenessSort } from  './todo-sort/todo-completeness.sort';
 import { TodoSortingComponent } from './todo-list/todo-sorting/todo-sorting.component';
 import { KeysPipe } from './shared/keys.pipe';
 
+import { Http } from '@angular/http'; 
+
+const authServerURL = 'http://localhost:3000/auth/login';
 
 export function behaviorSubjectFactory() {
     return new BehaviorSubject<Action>(new LoadTodosAction([]));
@@ -37,6 +46,33 @@ export function todoSorterFactory( _todoDeadlineSort:       TodoDeadlineSort,
                                    _todoDateCompletedSort: TodoDateCompletedSort) {
     return new TodoSorter( _todoDeadlineSort, _todoDateCreatedSort, _todoCompletenessSort, _todoDateCompletedSort);
 }
+
+export function authJWTServiceFactory( http: Http ) {
+  return new AuthJWTService(http, authServerURL);
+}
+
+export function authenticatedAuthGuardFactory(authService: IAuthService) {
+    return new AuthenticatedAuthGuard(authService);
+}
+
+
+const appRoutes: Routes = [
+  { 
+      path: 'todo',   
+      component: TodoListComponent,
+      canActivate: ['AuthenticatedAuthGuard']
+
+  },
+  { 
+      path: 'login',   
+      component: LoginComponent,
+  },
+  { 
+    path: '',
+    redirectTo: 'login',
+    pathMatch: 'full'
+  }
+];
 
 @NgModule({
   declarations: [
@@ -53,13 +89,21 @@ export function todoSorterFactory( _todoDeadlineSort:       TodoDeadlineSort,
     BrowserModule,
     FormsModule,
     HttpModule,
-    AlertModule.forRoot()
+    LoginModule,
+    RouterModule.forRoot(appRoutes)
   ],
   providers: [
+    AuthJWTService,
+    LoginService,
     TodoFactory,
     TodoDeadlineSort,
     TodoDateCreatedSort,
     TodoCompletenessSort,
+    {
+      provide: authJWTService,
+      useFactory: authJWTServiceFactory,
+      deps: [Http]
+    },
     { provide: todoSorter, 
       useFactory: todoSorterFactory, 
       deps: [ TodoDeadlineSort, TodoDateCreatedSort, TodoCompletenessSort ]},
@@ -75,8 +119,12 @@ export function todoSorterFactory( _todoDeadlineSort:       TodoDeadlineSort,
       provide:       state, 
       useFactory:    applicationStateFactory, 
       deps:          [ initialState, dispatcher, todoSorter]
+    },
+    { 
+      provide:       'AuthenticatedAuthGuard', 
+      useFactory:    authenticatedAuthGuardFactory, 
+      deps:          [ authJWTService ]
     }
-
   ],
   bootstrap: [
     AppComponent
